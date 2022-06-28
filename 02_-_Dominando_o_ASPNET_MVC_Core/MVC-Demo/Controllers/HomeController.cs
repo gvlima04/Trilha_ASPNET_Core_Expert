@@ -19,13 +19,35 @@ public class HomeController : Controller
     [Route("home/{id:int}/{category}")]
     public IActionResult Index(int id, string category, string var)
     {
-        return View();
+        // Apenas para teste das validações, vamos criar um Movie com dados inválidos.
+        Movie movie = new Movie
+        {
+            Id = 10,
+            Title = "Oi",
+            ReleaseDate = DateTime.Now,
+            Value = 10000,
+            Rating = 10
+        };
+
+        // Vamos chamar a Action Privacy onde validaremos o objeto movie
+
+        return RedirectToAction("Privacy", movie);
+        // return View();
     }
 
     [Route("privacidade")]
     [Route("politica-de-privacidade")]
-    public IActionResult Privacy()
+    public IActionResult Privacy(Movie movie)
     {
+        if(!ModelState.IsValid){
+            Console.WriteLine($"{ModelState.Count} error(s) found");
+            foreach (var error in ModelState.Values.SelectMany(i => i.Errors))
+            {
+                Console.WriteLine($"Error: {error.ErrorMessage}");
+            }
+
+        }
+
         return View();
     }
 
